@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:news_app/views/home.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -18,6 +19,8 @@ class _ArticleViewState extends State<ArticleView> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom]);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -55,6 +58,7 @@ class _ArticleViewState extends State<ArticleView> {
         width: MediaQuery.of(context).size.width,
         child: WebView(
           initialUrl: widget.blogUrl,
+          javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController controller) {
             _completer.complete(controller);
           },

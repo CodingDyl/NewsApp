@@ -31,3 +31,32 @@ class News {
     }
   }
 }
+
+class CategoryNewsClass {
+  List<ArticleModel> news = [];
+
+  Future<void> getNews(String category) async {
+    String urlData =
+        "https://newsapi.org/v2/top-headlines?category=$category&country=za&apiKey=cd87473495ed4fd585bbaccf6d8376b2";
+
+    var response = await http.get(Uri.parse(urlData));
+
+    var jsonData = jsonDecode(response.body);
+
+    if (jsonData["status"] == "ok") {
+      jsonData["articles"].forEach((element) {
+        if (element["urlToImage"] != null && element["description"] != null) {
+          ArticleModel articlemodel = ArticleModel(
+              title: element["title"],
+              author: element["author"],
+              description: element["description"],
+              url: element["url"],
+              urlToImage: element["urlToImage"],
+              content: element["content"]);
+
+          news.add(articlemodel);
+        }
+      });
+    }
+  }
+}
