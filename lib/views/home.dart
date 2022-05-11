@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/helper/data.dart';
 import 'package:news_app/helper/news.dart';
 import 'package:news_app/models/article_model.dart';
 import 'package:news_app/models/category_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_app/views/article_view.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -85,12 +87,14 @@ class _HomeState extends State<Home> {
                           itemCount: articles.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          physics: BouncingScrollPhysics(),
+                          physics: const ClampingScrollPhysics(),
                           itemBuilder: (context, index) {
                             return BlogTile(
-                                imageUrl: articles[index].urlToImage!,
-                                desc: articles[index].description!,
-                                title: articles[index].title!);
+                              imageUrl: articles[index].urlToImage!,
+                              desc: articles[index].description!,
+                              title: articles[index].title!,
+                              url: articles[index].url!,
+                            );
                           }),
                     ),
                   ),
@@ -116,8 +120,8 @@ class CategoryTile extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: Image.network(
-                imgUrl,
+              child: CachedNetworkImage(
+                imageUrl: imgUrl,
                 width: 120,
                 height: 60,
                 fit: BoxFit.fill,
@@ -151,20 +155,40 @@ class BlogTile extends StatelessWidget {
       {Key? key,
       required this.imageUrl,
       required this.desc,
-      required this.title})
+      required this.title,
+      required this.url})
       : super(key: key);
 
-  final String imageUrl, title, desc;
+  final String imageUrl, title, desc, url;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Image.network(imageUrl),
-          Text(title),
-          Text(desc),
-        ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) => ArticleView(
+                      blogUrl: url,
+                    )));
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Column(
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.network(imageUrl)),
+            const SizedBox(height: 8.0),
+            Text(
+              title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8.0),
+            Text(desc,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300)),
+          ],
+        ),
       ),
     );
   }
