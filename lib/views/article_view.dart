@@ -38,10 +38,10 @@ class _ArticleViewState extends State<ArticleView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
             Text(
-              "Flutter",
+              "Staying",
               style: TextStyle(color: Colors.black),
             ),
-            Text("News", style: TextStyle(color: Colors.blue)),
+            Text("UpToDate", style: TextStyle(color: Colors.blue)),
           ],
         ),
         actions: const [
